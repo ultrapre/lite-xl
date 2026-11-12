@@ -117,10 +117,10 @@ end
 
 local function show_max_files_warning(dir)
   local message = dir.slow_filesystem and
-    "Filesystem is too slow: project files will not be indexed." or
-    "Too many files in project directory: stopped reading at "..
-    config.max_project_files.." files. For more information see "..
-    "usage.md at https://github.com/lite-xl/lite-xl."
+    "文件系统太慢：项目文件不会被索引。" or
+    "项目中的文件太多：已停止读取于 "..
+    config.max_project_files.." 个文件。更多信息请参见 "..
+    "https://github.com/lite-xl/lite-xl 上的 usage.md。"
   core.warn(message)
 end
 
@@ -795,7 +795,7 @@ function core.init()
     end
   end
   if not project_dir_abs then
-    system.show_fatal_error("Error", "Please restart Lite XL with a readable project directory.")
+    system.show_fatal_error("错误", "请使用可读的项目目录重新启动 Lite XL。")
     os.exit(1)
   end
 
@@ -832,23 +832,23 @@ function core.init()
 
   if #plugins_refuse_list.userdir.plugins > 0 or #plugins_refuse_list.datadir.plugins > 0 then
     local opt = {
-      { text = "Exit", default_no = true },
-      { text = "Continue", default_yes = true }
+      { text = "退出", default_no = true },
+      { text = "继续", default_yes = true }
     }
     local msg = {}
     for _, entry in pairs(plugins_refuse_list) do
       if #entry.plugins > 0 then
-        msg[#msg + 1] = string.format("Plugins from directory \"%s\":\n%s", common.home_encode(entry.dir), table.concat(entry.plugins, "\n"))
+        msg[#msg + 1] = string.format("目录 \"%s\" 中的插件：\n%s", common.home_encode(entry.dir), table.concat(entry.plugins, "\n"))
       end
     end
     core.nag_view:show(
-      "Refused Plugins",
+      "拒绝加载的插件",
       string.format(
-        "Some plugins are not loaded due to version mismatch.\n\n%s.\n\n" ..
-        "Please download a recent version from https://github.com/lite-xl/lite-xl-plugins.",
+        "部分插件因版本不匹配未加载。\n\n%s。\n\n" ..
+        "请从 https://github.com/lite-xl/lite-xl-plugins 下载较新版本。",
         table.concat(msg, ".\n\n")),
       opt, function(item)
-        if item.text == "Exit" then os.exit(1) end
+        if item.text == "退出" then os.exit(1) end
       end)
   end
 
@@ -868,17 +868,17 @@ function core.confirm_close_docs(docs, close_fn, ...)
   if dirty_count > 0 then
     local text
     if dirty_count == 1 then
-      text = string.format("\"%s\" has unsaved changes. Quit anyway?", dirty_name)
+      text = string.format("\"%s\" 有未保存的更改，仍要退出吗？", dirty_name)
     else
-      text = string.format("%d docs have unsaved changes. Quit anyway?", dirty_count)
+      text = string.format("有 %d 个文件未保存更改，仍要退出吗？", dirty_count)
     end
     local args = {...}
     local opt = {
-      { text = "Yes", default_yes = true },
-      { text = "No", default_no = true }
+      { text = "是", default_yes = true },
+      { text = "否", default_no = true }
     }
-    core.nag_view:show("Unsaved Changes", text, opt, function(item)
-      if item.text == "Yes" then close_fn(table.unpack(args)) end
+    core.nag_view:show("未保存的更改", text, opt, function(item)
+      if item.text == "是" then close_fn(table.unpack(args)) end
     end)
   else
     close_fn(...)

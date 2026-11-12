@@ -47,12 +47,12 @@ function LogView:new()
   self.scrollable = true
   self.yoffset = 0
 
-  core.status_view:show_message("i", style.text, "ctrl+click to copy entry")
+  core.status_view:show_message("i", style.text, "Ctrl+点击复制该条")
 end
 
 
 function LogView:get_name()
-  return "Log"
+  return "日志"
 end
 
 
@@ -113,7 +113,7 @@ function LogView:on_mouse_pressed(button, px, py, clicks)
   if selected then
     if keymap.modkeys["ctrl"] then
       system.set_clipboard(core.get_log(selected))
-      core.status_view:show_message("i", style.text, "copied entry #"..index.." to clipboard.")
+      core.status_view:show_message("i", style.text, "已复制第 "..index.." 条到剪贴板。")
     else
       self:expand_item(selected)
     end

@@ -72,11 +72,11 @@ end
 
 local function check_prompt_reload(doc)
   if doc and doc.deferred_reload then
-    core.nag_view:show("File Changed", doc.filename .. " has changed. Reload this file?", {
-      { text = "Yes", default_yes = true },
-      { text = "No", default_no = true }
+    core.nag_view:show("文件已更改", doc.filename .. " 已被修改，是否重新载入？", {
+      { text = "是", default_yes = true },
+      { text = "否", default_no = true }
     }, function(item)
-      if item.text == "Yes" then reload_doc(doc) end
+      if item.text == "是" then reload_doc(doc) end
       doc.deferred_reload = false
     end)
   end

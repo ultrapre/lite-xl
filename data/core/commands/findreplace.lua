@@ -22,11 +22,11 @@ local function get_find_tooltip()
   local rf = keymap.get_binding("find-replace:repeat-find")
   local ti = keymap.get_binding("find-replace:toggle-sensitivity")
   local tr = keymap.get_binding("find-replace:toggle-regex")
-  return (find_regex and "[Regex] " or "") ..
-    (case_sensitive and "[Sensitive] " or "") ..
-    (rf and ("Press " .. rf .. " to select the next match.") or "") ..
-    (ti and (" " .. ti .. " toggles case sensitivity.") or "") ..
-    (tr and (" " .. tr .. " toggles regex find.") or "")
+  return (find_regex and "[正则] " or "") ..
+    (case_sensitive and "[区分大小写] " or "") ..
+    (rf and ("按 " .. rf .. " 选择下一个匹配。") or "") ..
+    (ti and (" " .. ti .. " 切换区分大小写。") or "") ..
+    (tr and (" " .. tr .. " 切换正则查找。") or "")
 end
 
 local function update_preview(sel, search_fn, text)
@@ -73,7 +73,7 @@ local function find(label, search_fn)
       if found_expression then
         last_fn, last_text = search_fn, text
       else
-        core.error("Couldn't find %q", text)
+        core.error("找不到 %q", text)
         last_view.doc:set_selection(table.unpack(last_sel))
         last_view:scroll_to_make_visible(table.unpack(last_sel))
       end
@@ -96,14 +96,14 @@ end
 
 local function replace(kind, default, fn)
   core.status_view:show_tooltip(get_find_tooltip())
-  core.command_view:enter("Find To Replace " .. kind, {
+  core.command_view:enter("查找并替换 " .. kind, {
     text = default,
     select_text = true,
     show_suggestions = false,
     submit = function(old)
       insert_unique(core.previous_find, old)
 
-      local s = string.format("Replace %s %q With", kind, old)
+      local s = string.format("将 %s %q 替换为", kind, old)
       core.command_view:enter(s, {
         text = old,
         select_text = true,
@@ -205,7 +205,7 @@ command.add(has_unique_selection, {
 
 command.add("core.docview!", {
   ["find-replace:find"] = function()
-    find("Find Text", function(doc, line, col, text, case_sensitive, find_regex, find_reverse)
+    find("查找文本", function(doc, line, col, text, case_sensitive, find_regex, find_reverse)
       local opt = { wrap = true, no_case = not case_sensitive, regex = find_regex, reverse = find_reverse }
       return search.find(doc, line, col, text, opt)
     end)
@@ -214,7 +214,7 @@ command.add("core.docview!", {
   ["find-replace:replace"] = function()
     local l1, c1, l2, c2 = doc():get_selection()
     local selected_text = doc():get_text(l1, c1, l2, c2)
-    replace("Text", l1 == l2 and selected_text or "", function(text, old, new)
+    replace("文本", l1 == l2 and selected_text or "", function(text, old, new)
       if not find_regex then
         return text:gsub(old:gsub("%W", "%%%1"), new:gsub("%%", "%%%%"), nil)
       end
@@ -229,7 +229,7 @@ command.add("core.docview!", {
       local text = doc():get_text(doc():get_selection())
       first = text:match(config.symbol_pattern) or ""
     end
-    replace("Symbol", first, function(text, old, new)
+    replace("符号", first, function(text, old, new)
       local n = 0
       local res = text:gsub(config.symbol_pattern, function(sym)
         if old == sym then
@@ -253,7 +253,7 @@ end
 command.add(valid_for_finding, {
   ["find-replace:repeat-find"] = function(dv)
     if not last_fn then
-      core.error("No find to continue from")
+      core.error("没有可继续的查找")
     else
       local sl1, sc1, sl2, sc2 = dv.doc:get_selection(true)
       local line1, col1, line2, col2 = last_fn(dv.doc, sl2, sc2, last_text, case_sensitive, find_regex, false)
@@ -261,14 +261,14 @@ command.add(valid_for_finding, {
         dv.doc:set_selection(line2, col2, line1, col1)
         dv:scroll_to_line(line2, true)
       else
-        core.error("Couldn't find %q", last_text)
+        core.error("找不到 %q", last_text)
       end
     end
   end,
 
   ["find-replace:previous-find"] = function(dv)
     if not last_fn then
-      core.error("No find to continue from")
+      core.error("没有可继续的查找")
     else
       local sl1, sc1, sl2, sc2 = dv.doc:get_selection(true)
       local line1, col1, line2, col2 = last_fn(dv.doc, sl1, sc1, last_text, case_sensitive, find_regex, true)
@@ -276,7 +276,7 @@ command.add(valid_for_finding, {
         dv.doc:set_selection(line2, col2, line1, col1)
         dv:scroll_to_line(line2, true)
       else
-        core.error("Couldn't find %q", last_text)
+        core.error("找不到 %q", last_text)
       end
     end
   end,

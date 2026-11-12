@@ -42,7 +42,7 @@ end
 
 command.add("core.docview", {
   ["tabularize:tabularize"] = function(dv)
-    core.command_view:enter("Tabularize On Delimiter", {
+    core.command_view:enter("按分隔符对齐", {
       submit = function(delim)
         if delim == "" then delim = " " end
 

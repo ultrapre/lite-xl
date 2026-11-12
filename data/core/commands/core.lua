@@ -48,7 +48,7 @@ command.add(nil, {
   end,
 
   ["core:reload-module"] = function()
-    core.command_view:enter("Reload Module", {
+    core.command_view:enter("重新加载模块", {
       submit = function(text, item)
         local text = item and item.text or text
         core.reload_module(text)
@@ -66,7 +66,7 @@ command.add(nil, {
 
   ["core:find-command"] = function()
     local commands = command.get_all_valid()
-    core.command_view:enter("Do Command", {
+    core.command_view:enter("执行命令", {
       submit = function(text, item)
         if item then
           command.perform(item.command)
@@ -97,7 +97,7 @@ command.add(nil, {
         table.insert(files, common.home_encode(path .. item.filename))
       end
     end
-    core.command_view:enter("Open File From Project", {
+    core.command_view:enter("打开项目中的文件", {
       submit = function(text, item)
         text = item and item.text or text
         core.root_view:open_doc(core.open_doc(common.home_expand(text)))
@@ -113,7 +113,7 @@ command.add(nil, {
   end,
 
   ["core:new-named-doc"] = function()
-    core.command_view:enter("File name", {
+    core.command_view:enter("文件名", {
       submit = function(text)
         core.root_view:open_doc(core.open_doc(text))
       end
@@ -130,7 +130,7 @@ command.add(nil, {
         text = dirname == core.project_dir and "" or common.home_encode(dirname) .. PATHSEP
       end
     end
-    core.command_view:enter("Open File", {
+    core.command_view:enter("打开文件", {
       text = text,
       submit = function(text)
         local filename = system.absolute_path(common.home_expand(text))
@@ -151,9 +151,9 @@ command.add(nil, {
                 return true
               end
             end
-            core.error("Cannot open file %s: %s", text, err)
+            core.error("无法打开文件 %s：%s", text, err)
           elseif path_stat.type == 'dir' then
-            core.error("Cannot open %s, is a folder", text)
+            core.error("无法打开 %s：这是一个文件夹", text)
           else
             return true
           end
@@ -187,13 +187,13 @@ command.add(nil, {
     if dirname then
       text = common.home_encode(dirname) .. PATHSEP
     end
-    core.command_view:enter("Change Project Folder", {
+    core.command_view:enter("切换项目文件夹", {
       text = text,
       submit = function(text)
         local path = common.home_expand(text)
         local abs_path = check_directory_path(path)
         if not abs_path then
-          core.error("Cannot open directory %q", path)
+          core.error("无法打开目录 %q", path)
           return
         end
         if abs_path == core.project_dir then return end
@@ -211,17 +211,17 @@ command.add(nil, {
     if dirname then
       text = common.home_encode(dirname) .. PATHSEP
     end
-    core.command_view:enter("Open Project", {
+    core.command_view:enter("打开项目", {
       text = text,
       submit = function(text)
         local path = common.home_expand(text)
         local abs_path = check_directory_path(path)
         if not abs_path then
-          core.error("Cannot open directory %q", path)
+          core.error("无法打开目录 %q", path)
           return
         end
         if abs_path == core.project_dir then
-          core.error("Directory %q is currently opened", abs_path)
+          core.error("目录 %q 已经打开", abs_path)
           return
         end
         system.exec(string.format("%q %q", EXEFILE, abs_path))
@@ -231,15 +231,15 @@ command.add(nil, {
   end,
 
   ["core:add-directory"] = function()
-    core.command_view:enter("Add Directory", {
+    core.command_view:enter("添加目录", {
       submit = function(text)
         text = common.home_expand(text)
         local path_stat, err = system.get_file_info(text)
         if not path_stat then
-          core.error("cannot open %q: %s", text, err)
+          core.error("无法打开 %q：%s", text, err)
           return
         elseif path_stat.type ~= 'dir' then
-          core.error("%q is not a directory", text)
+          core.error("%q 不是目录", text)
           return
         end
         core.add_project_directory(system.absolute_path(text))
@@ -254,11 +254,11 @@ command.add(nil, {
     for i = n, 2, -1 do
       dir_list[n - i + 1] = core.project_directories[i].name
     end
-    core.command_view:enter("Remove Directory", {
+    core.command_view:enter("移除目录", {
       submit = function(text, item)
         text = common.home_expand(item and item.text or text)
         if not core.remove_project_directory(text) then
-          core.error("No directory %q to be removed", text)
+          core.error("没有可移除的目录 %q", text)
         end
       end,
       suggest = function(text)

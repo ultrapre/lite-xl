@@ -23,7 +23,7 @@ end
 
 
 function ResultsView:get_name()
-  return "Search Results"
+  return "搜索结果"
 end
 
 
@@ -194,15 +194,15 @@ function ResultsView:draw()
   local text
   if self.searching then
     if files_number then
-      text = string.format("Searching %.f%% (%d of %d files, %d matches) for %q...",
+      text = string.format("正在搜索 %.f%%（共 %d 个文件，已搜 %d 个，%d 处匹配）：%q...",
         per * 100, self.last_file_idx, files_number,
         #self.results, self.query)
     else
-      text = string.format("Searching (%d files, %d matches) for %q...",
+      text = string.format("正在搜索（%d 个文件，%d 处匹配）：%q...",
         self.last_file_idx, #self.results, self.query)
     end
   else
-    text = string.format("Found %d matches for %q",
+    text = string.format("找到 %d 处匹配：%q",
       #self.results, self.query)
   end
   local color = common.lerp(style.text, style.accent, self.brightness / 100)
@@ -229,7 +229,7 @@ function ResultsView:draw()
       renderer.draw_rect(x, y, w, h, style.line_highlight)
     end
     x = x + style.padding.x
-    local text = string.format("%s at line %d (col %d): ", item.file, item.line, item.col)
+    local text = string.format("%s 第 %d 行（第 %d 列）：", item.file, item.line, item.col)
     x = common.draw_text(style.font, style.dim, text, "left", x, y, w, h)
     x = common.draw_text(style.code_font, color, item.text, "left", x, y, w, h)
     self.max_h_scroll = math.max(self.max_h_scroll, x)
@@ -245,7 +245,7 @@ end
 ---@return plugins.projectsearch.resultsview?
 local function begin_search(path, text, fn)
   if text == "" then
-    core.error("Expected non-empty string")
+    core.error("请输入非空字符串")
     return
   end
   local rv = ResultsView(path, text, fn)
@@ -330,7 +330,7 @@ end
 
 command.add(nil, {
   ["project-search:find"] = function(path)
-    core.command_view:enter("Find Text In " .. (normalize_path(path) or "Project"), {
+    core.command_view:enter("在 " .. (normalize_path(path) or "项目") .. " 中查找文本", {
       text = get_selected_text(),
       select_text = true,
       submit = function(text)
@@ -340,7 +340,7 @@ command.add(nil, {
   end,
 
   ["project-search:find-regex"] = function(path)
-    core.command_view:enter("Find Regex In " .. (normalize_path(path) or "Project"), {
+    core.command_view:enter("在 " .. (normalize_path(path) or "项目") .. " 中正则查找", {
       submit = function(text)
         projectsearch.search_regex(text, path, true)
       end
@@ -348,7 +348,7 @@ command.add(nil, {
   end,
 
   ["project-search:fuzzy-find"] = function(path)
-    core.command_view:enter("Fuzzy Find Text In " .. (normalize_path(path) or "Project"), {
+    core.command_view:enter("在 " .. (normalize_path(path) or "项目") .. " 中模糊查找", {
       text = get_selected_text(),
       select_text = true,
       submit = function(text)

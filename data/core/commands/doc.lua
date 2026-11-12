@@ -43,11 +43,11 @@ local function save(filename)
     core.log("Saved \"%s\"", saved_filename)
   else
     core.error(err)
-    core.nag_view:show("Saving failed", string.format("Couldn't save file \"%s\". Do you want to save to another location?", doc().filename), {
-      { text = "Yes", default_yes = true },
-      { text = "No", default_no = true }
+    core.nag_view:show("保存失败", string.format("无法保存文件 \"%s\"。是否保存到其他位置？", doc().filename), {
+      { text = "是", default_yes = true },
+      { text = "否", default_no = true }
     }, function(item)
-      if item.text == "Yes" then
+      if item.text == "是" then
         core.add_thread(function()
           -- we need to run this in a thread because of the odd way the nagview is.
           command.perform("doc:save-as")
@@ -520,16 +520,16 @@ local commands = {
       items = {}
       local mt = { __tostring = function(x) return x.text end }
       for i, line in ipairs(dv.doc.lines) do
-        local item = { text = line:sub(1, -2), line = i, info = "line: " .. i }
+        local item = { text = line:sub(1, -2), line = i, info = "行: " .. i }
         table.insert(items, setmetatable(item, mt))
       end
     end
 
-    core.command_view:enter("Go To Line", {
+    core.command_view:enter("跳转到行", {
       submit = function(text, item)
         local line = item and item.line or tonumber(text)
         if not line then
-          core.error("Invalid line number or unmatched string")
+          core.error("行号无效或字符串不匹配")
           return
         end
         dv.doc:set_selection(line, 1  )
@@ -557,7 +557,7 @@ local commands = {
       local dirname, filename = core.last_active_view.doc.abs_filename:match("(.*)[/\\](.+)$")
       text = core.normalize_to_project_dir(dirname) .. PATHSEP
     end
-    core.command_view:enter("Save As", {
+    core.command_view:enter("另存为", {
       text = text,
       submit = function(filename)
         save(common.home_expand(filename))
@@ -583,10 +583,10 @@ local commands = {
   ["file:rename"] = function(dv)
     local old_filename = dv.doc.filename
     if not old_filename then
-      core.error("Cannot rename unsaved doc")
+      core.error("无法重命名未保存的文件")
       return
     end
-    core.command_view:enter("Rename", {
+    core.command_view:enter("重命名", {
       text = old_filename,
       submit = function(filename)
         save(common.home_expand(filename))
@@ -605,7 +605,7 @@ local commands = {
   ["file:delete"] = function(dv)
     local filename = dv.doc.abs_filename
     if not filename then
-      core.error("Cannot remove unsaved doc")
+      core.error("无法删除未保存的文件")
       return
     end
     for i,docview in ipairs(core.get_views_referencing_doc(dv.doc)) do

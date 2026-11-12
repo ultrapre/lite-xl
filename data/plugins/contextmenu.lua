@@ -64,19 +64,19 @@ keymap.add { ["escape"] = "context:hide" }
 
 
 local cmds = {
-  { text = "Cut",     command = "doc:cut" },
-  { text = "Copy",    command = "doc:copy" },
-  { text = "Paste",   command = "doc:paste" },
+  { text = "剪切",     command = "doc:cut" },
+  { text = "复制",    command = "doc:copy" },
+  { text = "粘贴",   command = "doc:paste" },
   ContextMenu.DIVIDER,
-  { text = "Find",    command = "find-replace:find"    },
-  { text = "Replace", command = "find-replace:replace" }
+  { text = "查找",    command = "find-replace:find"    },
+  { text = "替换", command = "find-replace:replace" }
 }
 
 if config.plugins.scale ~= false and require("plugins.scale") then
   table.move(cmds, 4, 6, 7)
-  cmds[4] = { text = "Font +",     command = "scale:increase" }
-  cmds[5] = { text = "Font -",     command = "scale:decrease" }
-  cmds[6] = { text = "Font Reset", command = "scale:reset"    }
+  cmds[4] = { text = "放大字体",     command = "scale:increase" }
+  cmds[5] = { text = "缩小字体",     command = "scale:decrease" }
+  cmds[6] = { text = "重置字体", command = "scale:reset"    }
 end
 
 menu:register("core.docview", cmds)

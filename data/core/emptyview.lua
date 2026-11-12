@@ -9,7 +9,7 @@ local EmptyView = View:extend()
 function EmptyView:__tostring() return "EmptyView" end
 
 function EmptyView:get_name()
-  return "Get Started"
+  return "开始使用"
 end
 
 function EmptyView:get_filename()
@@ -18,17 +18,17 @@ end
 
 local function draw_text(x, y, color)
   local lines = {
-    { fmt = "%s to run a command", cmd = "core:find-command" },
-    { fmt = "%s to open a file from the project", cmd = "core:find-file" },
-    { fmt = "%s to change project folder", cmd = "core:change-project-folder" },
-    { fmt = "%s to open a project folder", cmd = "core:open-project-folder" },
+    { fmt = "%s 执行命令", cmd = "core:find-command" },
+    { fmt = "%s 打开项目中的文件", cmd = "core:find-file" },
+    { fmt = "%s 切换项目文件夹", cmd = "core:change-project-folder" },
+    { fmt = "%s 打开项目文件夹", cmd = "core:open-project-folder" },
   }
   local th = style.big_font:get_height()
   local dh = 2 * th + style.padding.y * 2
   local x1, y1 = x, y + ((dh - th) / #lines)
   local xv = x1
   local title = "Lite XL"
-  local version = "version " .. VERSION
+  local version = "版本 " .. VERSION
   local title_width = style.big_font:get_width(title)
   local version_width = style.font:get_width(version)
   if version_width > title_width then

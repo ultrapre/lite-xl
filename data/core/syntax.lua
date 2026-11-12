@@ -4,7 +4,7 @@ local core   = require "core"
 local syntax = {}
 syntax.items = {}
 
-local plain_text_syntax = { name = "Plain Text", patterns = {}, symbols = {} }
+local plain_text_syntax = { name = "纯文本", patterns = {}, symbols = {} }
 
 
 ---Checks whether the pattern / regex compiles correctly and matches something.

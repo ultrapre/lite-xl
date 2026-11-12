@@ -522,7 +522,7 @@ local function treeitem() return view.hovered_item or view.selected_item end
 
 
 menu:register(function() return core.active_view:is(TreeView) and treeitem() end, {
-  { text = "Open in System", command = "treeview:open-in-system" },
+  { text = "在系统中打开", command = "treeview:open-in-system" },
   ContextMenu.DIVIDER
 })
 
@@ -532,8 +532,8 @@ menu:register(
     return core.active_view:is(TreeView) and item and not is_project_folder(item.abs_filename)
   end,
   {
-    { text = "Rename", command = "treeview:rename" },
-    { text = "Delete", command = "treeview:delete" },
+    { text = "重命名", command = "treeview:rename" },
+    { text = "删除", command = "treeview:delete" },
   }
 )
 
@@ -543,8 +543,8 @@ menu:register(
     return core.active_view:is(TreeView) and item and item.type == "dir"
   end,
   {
-    { text = "New File", command = "treeview:new-file" },
-    { text = "New Folder", command = "treeview:new-folder" },
+    { text = "新建文件", command = "treeview:new-file" },
+    { text = "新建文件夹", command = "treeview:new-folder" },
   }
 )
 
@@ -556,7 +556,7 @@ menu:register(
       and is_project_folder(item.abs_filename)
   end,
   {
-    { text = "Remove directory", command = "treeview:remove-project-directory" },
+    { text = "移除目录", command = "treeview:remove-project-directory" },
   }
 )
 
@@ -681,31 +681,31 @@ command.add(
       relfilename = common.basename(item.dir_name) .. PATHSEP .. relfilename
     end
     local file_info = system.get_file_info(filename)
-    local file_type = file_info.type == "dir" and "Directory" or "File"
+    local file_type = file_info.type == "dir" and "目录" or "文件"
     -- Ask before deleting
     local opt = {
-      { text = "Yes", default_yes = true },
-      { text = "No", default_no = true }
+      { text = "是", default_yes = true },
+      { text = "否", default_no = true }
     }
     core.nag_view:show(
-      string.format("Delete %s", file_type),
+      string.format("删除 %s", file_type),
       string.format(
-        "Are you sure you want to delete the %s?\n%s: %s",
+        "确定要删除%s吗？\n%s：%s",
         file_type:lower(), file_type, relfilename
       ),
       opt,
       function(item)
-        if item.text == "Yes" then
+        if item.text == "是" then
           if file_info.type == "dir" then
             local deleted, error, path = common.rm(filename, true)
             if not deleted then
-              core.error("Error: %s - \"%s\" ", error, path)
+              core.error("错误：%s - \"%s\" ", error, path)
               return
             end
           else
             local removed, error = os.remove(filename)
             if not removed then
-              core.error("Error: %s - \"%s\"", error, filename)
+              core.error("错误：%s - \"%s\"", error, filename)
               return
             end
           end
@@ -718,7 +718,7 @@ command.add(
   ["treeview:rename"] = function(item)
     local old_filename = item.filename
     local old_abs_filename = item.abs_filename
-    core.command_view:enter("Rename", {
+    core.command_view:enter("重命名", {
       text = old_filename,
       submit = function(filename)
         local abs_filename = filename
@@ -736,7 +736,7 @@ command.add(
           end
           core.log("Renamed \"%s\" to \"%s\"", old_filename, filename)
         else
-          core.error("Error while renaming \"%s\" to \"%s\": %s", old_abs_filename, abs_filename, err)
+          core.error("将 \"%s\" 重命名为 \"%s\" 时出错：%s", old_abs_filename, abs_filename, err)
         end
       end,
       suggest = function(text)
@@ -755,7 +755,7 @@ command.add(
         text = parent_dir and parent_dir .. PATHSEP
       end
     end
-    core.command_view:enter("Filename", {
+    core.command_view:enter("文件名", {
       text = text,
       submit = function(filename)
         local doc_filename = item.dir_name .. PATHSEP .. filename
@@ -782,7 +782,7 @@ command.add(
         text = parent_dir and parent_dir .. PATHSEP
       end
     end
-    core.command_view:enter("Folder Name", {
+    core.command_view:enter("文件夹名称", {
       text = text,
       submit = function(filename)
         local dir_path = item.dir_name .. PATHSEP .. filename
@@ -812,7 +812,7 @@ if projectsearch then
     local item = treeitem()
     return item and item.type == "dir"
   end, { 
-    { text = "Find in directory", command = "treeview:search-in-directory" } 
+    { text = "在目录中查找", command = "treeview:search-in-directory" } 
   })
   command.add(function()
     return view.hovered_item and view.hovered_item.type == "dir"

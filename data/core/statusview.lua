@@ -242,7 +242,7 @@ function StatusView:register_docview_items()
       }
     end,
     command = "doc:go-to-line",
-    tooltip = "line : column"
+    tooltip = "行 : 列"
   })
 
   self:add_item({
@@ -252,7 +252,7 @@ function StatusView:register_docview_items()
     get_item = function()
       local dv = core.active_view
       local indent_type, indent_size, indent_confirmed = dv.doc:get_indent_info()
-      local indent_label = (indent_type == "hard") and "tabs: " or "spaces: "
+      local indent_label = (indent_type == "hard") and "制表符: " or "空格: "
       return {
         style.text, indent_label, indent_size,
         indent_confirmed and "" or "*"
@@ -278,7 +278,7 @@ function StatusView:register_docview_items()
         style.text,
         style.icon_font, "g",
         style.font, style.dim, self.separator2,
-        style.text, #dv.doc.lines, " lines",
+        style.text, #dv.doc.lines, " 行",
       }
     end,
     separator = self.separator2

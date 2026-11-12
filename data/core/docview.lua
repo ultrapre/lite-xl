@@ -74,19 +74,19 @@ end
 function DocView:try_close(do_close)
   if self.doc:is_dirty()
   and #core.get_views_referencing_doc(self.doc) == 1 then
-    core.command_view:enter("Unsaved Changes; Confirm Close", {
+    core.command_view:enter("未保存的更改，确认关闭", {
       submit = function(_, item)
-        if item.text:match("^[cC]") then
+        if item.text == "不保存并关闭" then
           do_close()
-        elseif item.text:match("^[sS]") then
+        elseif item.text == "保存并关闭" then
           self.doc:save()
           do_close()
         end
       end,
       suggest = function(text)
         local items = {}
-        if not text:find("^[^cC]") then table.insert(items, "Close Without Saving") end
-        if not text:find("^[^sS]") then table.insert(items, "Save And Close") end
+        if not text:find("^不") then table.insert(items, "不保存并关闭") end
+        if not text:find("^保") then table.insert(items, "保存并关闭") end
         return items
       end
     })

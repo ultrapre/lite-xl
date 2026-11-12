@@ -302,7 +302,7 @@ local function set_indent_type(doc, type)
 end
 
 local function set_indent_type_command(dv)
-  core.command_view:enter("Specify indent style for this file", {
+  core.command_view:enter("指定当前文件的缩进样式", {
     submit = function(value)
       local doc = dv.doc
       value = value:lower()
@@ -330,7 +330,7 @@ local function set_indent_size(doc, size)
 end
 
 local function set_indent_size_command(dv)
-  core.command_view:enter("Specify indent size for current file", {
+  core.command_view:enter("指定当前文件的缩进宽度", {
     submit = function(value)
       value = math.floor(tonumber(value))
       local doc = dv.doc

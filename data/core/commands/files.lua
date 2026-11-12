@@ -4,11 +4,11 @@ local common = require "core.common"
 
 command.add(nil, {
   ["files:create-directory"] = function()
-    core.command_view:enter("New directory name", {
+    core.command_view:enter("新目录名称", {
       submit = function(text)
         local success, err, path = common.mkdirp(text)
         if not success then
-          core.error("cannot create directory %q: %s", path, err)
+          core.error("无法创建目录 %q：%s", path, err)
         end
       end
     })

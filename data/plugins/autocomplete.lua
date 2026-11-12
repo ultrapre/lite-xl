@@ -147,14 +147,14 @@ core.add_thread(function()
             doc.disable_symbols = true
             local filename_message
             if doc.filename then
-              filename_message = "document " .. doc.filename
+              filename_message = "文档 " .. doc.filename
             else
-              filename_message = "unnamed document"
+              filename_message = "未命名文档"
             end
             core.status_view:show_message("!", style.accent,
-              "Too many symbols in "..filename_message..
-              ": stopping auto-complete for this document according to "..
-              "config.plugins.autocomplete.max_symbols."
+              "符号过多（"..filename_message..
+              "），已根据 config.plugins.autocomplete.max_symbols "..
+              "停止该文档的自动补全。"
             )
             collectgarbage('collect')
             return {}

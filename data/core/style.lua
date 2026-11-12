@@ -22,11 +22,47 @@ style.tab_width = common.round(170 * SCALE)
 --
 -- On High DPI monitor or non RGB monitor you may consider using antialiasing grayscale instead.
 -- The antialiasing grayscale with full hinting is interesting for crisp font rendering.
-style.font = renderer.font.load(DATADIR .. "/fonts/FiraSans-Regular.ttf", 15 * SCALE)
+-- 中文字体回退：内置字体不含中文字形，这里查找系统中文字体作为后备字体，
+-- 否则中文会显示为方块。也可以把任意中文字体放到 DATADIR/fonts/cjk.ttf 使用。
+local function find_font(paths)
+  for _, path in ipairs(paths) do
+    local info = system.get_file_info(path)
+    if info and info.type == "file" then
+      return path
+    end
+  end
+end
+
+local cjk_font_path = find_font({
+  DATADIR .. "/fonts/cjk.ttf",
+  DATADIR .. "/fonts/cjk.otf",
+  "C:/Windows/Fonts/msyh.ttc",
+  "C:/Windows/Fonts/msyh.ttf",
+  "C:/Windows/Fonts/simhei.ttf",
+  "C:/Windows/Fonts/simsun.ttc",
+  "/System/Library/Fonts/PingFang.ttc",
+  "/System/Library/Fonts/Hiragino Sans GB.ttc",
+  "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+  "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
+  "/usr/share/fonts/truetype/wqy/wqy-microhei.ttc",
+  "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+  "/usr/share/fonts/truetype/arphic/uming.ttc",
+})
+
+local function load_font(path, size, opts)
+  local font = renderer.font.load(path, size, opts)
+  if not cjk_font_path then return font end
+  local ok, fallback = pcall(renderer.font.load, cjk_font_path, size,
+    { antialiasing = "grayscale", hinting = "full" })
+  if not ok or not fallback then return font end
+  return renderer.font.group({ font, fallback })
+end
+
+style.font = load_font(DATADIR .. "/fonts/FiraSans-Regular.ttf", 15 * SCALE)
 style.big_font = style.font:copy(46 * SCALE)
 style.icon_font = renderer.font.load(DATADIR .. "/fonts/icons.ttf", 16 * SCALE, {antialiasing="grayscale", hinting="full"})
 style.icon_big_font = style.icon_font:copy(23 * SCALE)
-style.code_font = renderer.font.load(DATADIR .. "/fonts/JetBrainsMono-Regular.ttf", 15 * SCALE)
+style.code_font = load_font(DATADIR .. "/fonts/JetBrainsMono-Regular.ttf", 15 * SCALE)
 
 style.syntax = {}
 

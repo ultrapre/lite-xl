@@ -19,7 +19,7 @@ local function status_view_items_data(names)
     local item = core.status_view:get_item(name)
     table.insert(data, {
       text = command.prettify_name(item.name),
-      info = item.alignment == StatusView.Item.LEFT and "Left" or "Right",
+      info = item.alignment == StatusView.Item.LEFT and "左侧" or "右侧",
       name = item.name
     })
   end
@@ -50,7 +50,7 @@ command.add(nil, {
     core.status_view:display_messages(true)
   end,
   ["status-bar:hide-item"] = function()
-    core.command_view:enter("Status bar item to hide", {
+    core.command_view:enter("要隐藏的状态栏项", {
       submit = function(text, item)
         core.status_view:hide_items(item.name)
       end,
@@ -58,7 +58,7 @@ command.add(nil, {
     })
   end,
   ["status-bar:show-item"] = function()
-    core.command_view:enter("Status bar item to show", {
+    core.command_view:enter("要显示的状态栏项", {
       submit = function(text, item)
         core.status_view:show_items(item.name)
       end,
